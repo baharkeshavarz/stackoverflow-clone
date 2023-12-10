@@ -181,6 +181,7 @@
 
   .invert-colors {
     @apply invert dark:invert-0;
+    /* Use the invert and invert-0 utilities to control whether an element should be rendered with inverted colors or normally. */
   }
 
   .shadow-light100_dark100 {

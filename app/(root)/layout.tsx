@@ -12,7 +12,7 @@ const Layout = ({ children }: layoutProps) => {
       <div className="flex">
         LestSidebar
         <section className="max-md:pb-14 flex min-h-screen flex-1 flex-col px-6 pb-6 pt-36 sm:px-14">
-          <div className="mx-auto w-full max-w-5xl bg-gray-600">{children}</div>
+          <div className="mx-auto w-full max-w-5xl">{children}</div>
         </section>
         RightSidebar
       </div>
