@@ -6,6 +6,7 @@ const config: Config = {
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  darkMode: "class",
   theme: {
     container: {
       center: true,
@@ -56,6 +57,7 @@ const config: Config = {
     },
     screens: {
       xs: "420px",
+      sm: "640px",
     },
     keyframes: {
       "accordion-down": {
