@@ -58,6 +58,7 @@ const config: Config = {
     screens: {
       xs: "420px",
       sm: "640px",
+      lg: "1024px",
     },
     keyframes: {
       "accordion-down": {
