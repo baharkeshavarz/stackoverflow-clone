@@ -5,8 +5,8 @@ import { Badge } from "../ui/badge";
 interface RenderTagProps {
   _id: number;
   name: string;
-  totalQuestions: number;
-  showContent: boolean;
+  totalQuestions?: number;
+  showContent?: boolean;
 }
 
 const RenderTag = ({
