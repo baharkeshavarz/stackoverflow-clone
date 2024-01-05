@@ -1,3 +1,4 @@
+import QuestionCard from "@/components/cards/QuestionCard";
 import HomeFilters from "@/components/home/HomeFilters";
 import NoResult from "@/components/shared/NoResult";
 import Filter from "@/components/shared/search/Filter";
@@ -37,7 +38,17 @@ export default function Home() {
       <div className="mt-10 flex w-full flex-col gap-6">
         {questions.length > 0 ? (
           questions.map((question) => (
-            <div key={question._id}>{question.title}</div>
+            <QuestionCard
+              key={question._id}
+              id={question._id}
+              title={question.title}
+              answers={question.answers}
+              author={question.author}
+              upvotes={question.upvotes}
+              views={question.views}
+              tags={question.tags}
+              createdAt={question.createdAt}
+            />
           ))
         ) : (
           <NoResult

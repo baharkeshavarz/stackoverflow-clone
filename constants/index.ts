@@ -92,11 +92,17 @@ export const questions = [
       { _id: 1, name: "python" },
       { _id: 2, name: "sql" },
     ],
-    author: "John Doe",
+    author: [
+      {
+        _id: 1,
+        name: "John Doe",
+        picture: "",
+      },
+    ],
     upvotes: 10,
     views: 100,
-    answer: 2,
-    createdAt: "2023-12-09T09:28:06.000Z",
+    answers: [],
+    createdAt: new Date("2023-12-09T09:28:06.000Z"),
   },
   {
     _id: 2,
@@ -105,10 +111,16 @@ export const questions = [
       { _id: 1, name: "css" },
       { _id: 2, name: "sql" },
     ],
-    author: "Bahar Keshavarz",
+    author: [
+      {
+        _id: 2,
+        name: "Bahar Keshavarz",
+        picture: "",
+      },
+    ],
     upvotes: 5,
     views: 200,
-    answer: 2,
-    createdAt: "2024-01-05T04:28:06.000Z",
+    answers: [],
+    createdAt: new Date("2024-01-05T04:28:06.000Z"),
   },
 ];
