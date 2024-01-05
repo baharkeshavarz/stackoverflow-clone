@@ -1,7 +1,9 @@
 import HomeFilters from "@/components/home/HomeFilters";
+import NoResult from "@/components/shared/NoResult";
 import Filter from "@/components/shared/search/Filter";
 import LocalSearchbar from "@/components/shared/search/LocalSearchbar";
 import { Button } from "@/components/ui/button";
+import { questions } from "@/constants";
 import { HomePageFilters } from "@/constants/filters";
 import Link from "next/link";
 
@@ -32,6 +34,22 @@ export default function Home() {
         />
       </div>
       <HomeFilters />
+      <div className="mt-10 flex w-full flex-col gap-6">
+        {questions.length > 0 ? (
+          questions.map((question) => (
+            <div key={question._id}>{question.title}</div>
+          ))
+        ) : (
+          <NoResult
+            title="Theres's no question to answer."
+            description=" Be the first to break the silence! Ask a Question and kickstart the
+              discussion. Our query could be the next big thing others learn from. Get
+              involved!"
+            link="/ask-question"
+            linkTitle="Ask a Question"
+          />
+        )}
+      </div>
     </>
   );
 }

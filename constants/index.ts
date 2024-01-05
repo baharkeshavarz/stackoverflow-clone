@@ -83,3 +83,32 @@ export const BADGE_CRITERIA = {
     GOLD: 100000,
   },
 };
+
+export const questions = [
+  {
+    _id: 1,
+    title: "Cascading Deltes in SQL",
+    tags: [
+      { _id: 1, name: "python" },
+      { _id: 2, name: "sql" },
+    ],
+    author: "John Doe",
+    upvotes: 10,
+    views: 100,
+    answer: 2,
+    createdAt: "2023-12-09T09:28:06.000Z",
+  },
+  {
+    _id: 2,
+    title: "How to center a div?",
+    tags: [
+      { _id: 1, name: "css" },
+      { _id: 2, name: "sql" },
+    ],
+    author: "Bahar Keshavarz",
+    upvotes: 5,
+    views: 200,
+    answer: 2,
+    createdAt: "2024-01-05T04:28:06.000Z",
+  },
+];
