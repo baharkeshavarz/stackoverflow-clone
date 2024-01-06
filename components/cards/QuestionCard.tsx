@@ -28,7 +28,12 @@ const QuestionCard = ({
   tags,
   createdAt,
 }: QuestionCardProps) => {
-  return <div>{title}</div>;
+  return (
+      <div className="card-wrapper p-9 sm:px-11 rounded-[10px]">
+         
+
+       </div>
+  );
 };
 
 export default QuestionCard;
