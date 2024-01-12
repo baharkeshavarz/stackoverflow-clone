@@ -40,7 +40,7 @@ export default function Home() {
           questions.map((question) => (
             <QuestionCard
               key={question._id}
-              id={question._id}
+              _id={question._id}
               title={question.title}
               answers={question.answers}
               author={question.author}

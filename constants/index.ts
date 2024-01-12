@@ -86,41 +86,71 @@ export const BADGE_CRITERIA = {
 
 export const questions = [
   {
-    _id: 1,
+    _id: "1",
     title: "Cascading Deltes in SQL",
     tags: [
-      { _id: 1, name: "python" },
-      { _id: 2, name: "sql" },
+      { _id: "1", name: "python" },
+      { _id: "2", name: "sql" },
     ],
-    author: [
-      {
-        _id: 1,
-        name: "John Doe",
-        picture: "",
-      },
-    ],
+    author: {
+      _id: "1",
+      name: "John Doe",
+      picture: "",
+    },
     upvotes: 10,
     views: 100,
     answers: [],
     createdAt: new Date("2023-12-09T09:28:06.000Z"),
   },
   {
-    _id: 2,
+    _id: "2",
     title: "How to center a div?",
     tags: [
-      { _id: 1, name: "css" },
-      { _id: 2, name: "sql" },
+      { _id: "1", name: "css" },
+      { _id: "2", name: "sql" },
     ],
-    author: [
-      {
-        _id: 2,
-        name: "Bahar Keshavarz",
-        picture: "",
-      },
-    ],
+    author: {
+      _id: "2",
+      name: "Bahar Keshavarz",
+      picture: "",
+    },
     upvotes: 5,
     views: 200,
     answers: [],
     createdAt: new Date("2024-01-05T04:28:06.000Z"),
+  },
+  {
+    _id: "3",
+    title: "How to center a nav?",
+    tags: [
+      { _id: "1", name: "css" },
+      { _id: "2", name: "sql" },
+    ],
+    author: {
+      _id: "2",
+      name: "Bahar Keshavarz",
+      picture: "",
+    },
+    upvotes: 534,
+    views: 750000,
+    answers: [],
+    createdAt: new Date("2024-01-12T04:28:06.000Z"),
+  },
+  {
+    _id: "4",
+    title: "How to center a nav before?",
+    tags: [
+      { _id: "1", name: "css" },
+      { _id: "2", name: "sql" },
+    ],
+    author: {
+      _id: "2",
+      name: "Bahar Keshavarz",
+      picture: "",
+    },
+    upvotes: 25000000,
+    views: 185,
+    answers: [{}, {}],
+    createdAt: new Date("2020-01-12T04:28:06.000Z"),
   },
 ];
