@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Button } from "@/components/ui/button"
@@ -20,8 +20,12 @@ import * as z from "zod";
 import { Badge } from '../ui/badge';
 import Image from "next/image";
 
+const type = "edit";
+
 const Question = () => {
     const editorRef = useRef(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    
     const form = useForm<z.infer<typeof QuestionsSchema>>({
         resolver: zodResolver(QuestionsSchema),
         defaultValues: {
@@ -63,7 +67,14 @@ const Question = () => {
    }
 
    const onSubmit = (values: z.infer<typeof QuestionsSchema>) => {
-        console.log(values)
+      setIsSubmitting(true);
+        try {
+           // call
+        } catch (error) {
+          
+        } finally{
+          setIsSubmitting(false);
+        }
     }
 
   return (
@@ -175,7 +186,7 @@ const Question = () => {
                            alt="Close icon"
                            width={12}
                            height={12}
-                           className="cursor-pointer object-contain inset-0 dark:inver-1"
+                           className="cursor-pointer object-contain invert-0 dark:invert-1"
                          />
                       </Badge>
                      ))}
@@ -190,7 +201,22 @@ const Question = () => {
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button
+           type="submit" 
+           className="primary-gradient w-fit !text-light-900"
+           disabled={isSubmitting}
+           >
+          {isSubmitting ? (
+              <>
+                {type === "edit" ? "Editing..." : "Posting..."}
+              </>
+          )
+          : (
+            <>
+             {type === "edit" ? "Edit Question..." : "Ask a Question"}
+          </>
+           )}
+        </Button>
       </form>
     </Form>
   )
