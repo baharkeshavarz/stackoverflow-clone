@@ -1,9 +1,10 @@
 "use client";
 
-import React from 'react';
+import React, { useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Button } from "@/components/ui/button"
+import { Editor } from '@tinymce/tinymce-react';
 import {
   Form,
   FormControl,
@@ -18,7 +19,8 @@ import { QuestionsSchema } from '@/lib/validations';
 import * as z from "zod";
 
 const Question = () => {
-    const form = useForm<z.infer<typeof QuestionsSchema>>({
+  const editorRef = useRef(null);
+  const form = useForm<z.infer<typeof QuestionsSchema>>({
         resolver: zodResolver(QuestionsSchema),
         defaultValues: {
             title: "",
@@ -68,7 +70,37 @@ const Question = () => {
                 <span className="text-primary-500">*</span>
               </FormLabel>
               <FormControl className="mt-3.5">
-                {/*   */}
+              <Editor
+                  apiKey={process.env.NEXT_PUBLIC_TINY_EDITOR_API_KEY} 
+                  // @ts-ignore
+                  onInit={(evt, editor) => editorRef.current = editor}
+                  initialValue=""
+                  init={{
+                    height: 350,
+                    menubar: false,
+                    plugins: [
+                          'advlist',
+                          'autolink',
+                          'lists',
+                          'link',
+                          'image',
+                          'charmap',
+                          'preview',
+                          'anchor',
+                          'searchreplace',
+                          'visualblocks',
+                          'codesample',
+                          'fullscreen',
+                          'insertdatetime',
+                          'media',
+                          'table'             
+                    ],
+                    toolbar: 'undo redo | ' +
+                    'codesample | bold italic forecolor | alignleft aligncenter ' +
+                    'alignright alignjustify | bullist numlist' , 
+                    content_style: 'body { font-family:Inter; font-size:16px }'
+                   }}
+               />
               </FormControl>
               <FormDescription className="body-regular mt-2.5 text-light-500">
                  Introduce the problem and expand on what you put in the tile.Minimum 20 charachter.
