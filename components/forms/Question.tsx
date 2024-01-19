@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useRef, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from "@hookform/resolvers/zod"
-import { Button } from "@/components/ui/button"
-import { Editor } from '@tinymce/tinymce-react';
+import React, { useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@/components/ui/button";
+import { Editor } from "@tinymce/tinymce-react";
 import {
   Form,
   FormControl,
@@ -13,30 +13,35 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { QuestionsSchema } from '@/lib/validations';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { QuestionsSchema } from "@/lib/validations";
 import * as z from "zod";
-import { Badge } from '../ui/badge';
+import { Badge } from "../ui/badge";
 import Image from "next/image";
+import { createQuestion } from "@/lib/actions/question.action";
+import error from "next/error";
 
 const type = "edit";
 
 const Question = () => {
-    const editorRef = useRef(null);
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    
-    const form = useForm<z.infer<typeof QuestionsSchema>>({
-        resolver: zodResolver(QuestionsSchema),
-        defaultValues: {
-            title: "",
-            explanation: "",
-            tags: [],
-          },
-        })
-    
-   const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, field: any) => {
-    if(e.key === "Enter" && field.name === "tags") {
+  const editorRef = useRef(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const form = useForm<z.infer<typeof QuestionsSchema>>({
+    resolver: zodResolver(QuestionsSchema),
+    defaultValues: {
+      title: "",
+      explanation: "",
+      tags: [],
+    },
+  });
+
+  const handleInputKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    field: any
+  ) => {
+    if (e.key === "Enter" && field.name === "tags") {
       e.preventDefault();
 
       const tagInput = e.target as HTMLInputElement;
@@ -46,41 +51,43 @@ const Question = () => {
         if (tagValue.length > 15) {
           return form.setError("tags", {
             type: "required",
-            message: "Tag must be less thann 15 characters."
+            message: "Tag must be less thann 15 characters.",
           });
         }
 
-       if(!field.value.includes(tagValue as never)) {
-        form.setValue('tags', [...field.value, tagValue]);
-        tagInput.value = "";
-        form.clearErrors("tags")
-       } else {
-         form.trigger();
-       }
+        if (!field.value.includes(tagValue as never)) {
+          form.setValue("tags", [...field.value, tagValue]);
+          tagInput.value = "";
+          form.clearErrors("tags");
+        } else {
+          form.trigger();
+        }
       }
     }
-   }  
-   
-   const handleTagRemove = (tag: string, field: any) => {
+  };
+
+  const handleTagRemove = (tag: string, field: any) => {
     const newTags = field.value.filter((item: string) => item !== tag);
     form.setValue("tags", newTags);
-   }
+  };
 
-   const onSubmit = (values: z.infer<typeof QuestionsSchema>) => {
-      setIsSubmitting(true);
-        try {
-           // call
-        } catch (error) {
-          
-        } finally{
-          setIsSubmitting(false);
-        }
+  const onSubmit = async (values: z.infer<typeof QuestionsSchema>) => {
+    setIsSubmitting(true);
+    try {
+      await createQuestion({});
+    } catch (error) {
+      console.log("call api error:", error);
+    } finally {
+      setIsSubmitting(false);
     }
+  };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} 
-          className="flex w-full flex-col gap-10">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex w-full flex-col gap-10"
+      >
         <FormField
           control={form.control}
           name="title"
@@ -92,19 +99,20 @@ const Question = () => {
               </FormLabel>
               <FormControl className="mt-3.5">
                 <Input
-                    className="no-focus paragraph-regular background-light900_dark300
+                  className="no-focus paragraph-regular background-light900_dark300
                      light-border-2 text-dark300_light700 min-h-[56px] border"
-                    {...field} 
+                  {...field}
                 />
               </FormControl>
               <FormDescription className="body-regular mt-2.5 text-light-500">
-                  Be specific and imagine you&apos;re asking a question to another person
+                Be specific and imagine you&apos;re asking a question to another
+                person
               </FormDescription>
-              <FormMessage className="text-red-500"/>
+              <FormMessage className="text-red-500" />
             </FormItem>
           )}
         />
-       <FormField
+        <FormField
           control={form.control}
           name="explanation"
           render={({ field }) => (
@@ -114,47 +122,51 @@ const Question = () => {
                 <span className="text-primary-500">*</span>
               </FormLabel>
               <FormControl className="mt-3.5">
-              <Editor
-                  apiKey={process.env.NEXT_PUBLIC_TINY_EDITOR_API_KEY} 
+                <Editor
+                  apiKey={process.env.NEXT_PUBLIC_TINY_EDITOR_API_KEY}
                   // @ts-ignore
-                  onInit={(evt, editor) => editorRef.current = editor}
+                  onInit={(evt, editor) => (editorRef.current = editor)}
                   initialValue=""
+                  onBlur={field.onBlur}
+                  onEditorChange={(content) => field.onChange(content)}
                   init={{
                     height: 350,
                     menubar: false,
                     plugins: [
-                          'advlist',
-                          'autolink',
-                          'lists',
-                          'link',
-                          'image',
-                          'charmap',
-                          'preview',
-                          'anchor',
-                          'searchreplace',
-                          'visualblocks',
-                          'codesample',
-                          'fullscreen',
-                          'insertdatetime',
-                          'media',
-                          'table'             
+                      "advlist",
+                      "autolink",
+                      "lists",
+                      "link",
+                      "image",
+                      "charmap",
+                      "preview",
+                      "anchor",
+                      "searchreplace",
+                      "visualblocks",
+                      "codesample",
+                      "fullscreen",
+                      "insertdatetime",
+                      "media",
+                      "table",
                     ],
-                    toolbar: 'undo redo | ' +
-                    'codesample | bold italic forecolor | alignleft aligncenter ' +
-                    'alignright alignjustify | bullist numlist' , 
-                    content_style: 'body { font-family:Inter; font-size:16px }'
-                   }}
-               />
+                    toolbar:
+                      "undo redo | " +
+                      "codesample | bold italic forecolor | alignleft aligncenter " +
+                      "alignright alignjustify | bullist numlist",
+                    content_style: "body { font-family:Inter; font-size:16px }",
+                  }}
+                />
               </FormControl>
               <FormDescription className="body-regular mt-2.5 text-light-500">
-                 Introduce the problem and expand on what you put in the tile.Minimum 20 charachter.
+                Introduce the problem and expand on what you put in the
+                tile.Minimum 20 charachter.
               </FormDescription>
-              <FormMessage className="text-red-500"/>
+              <FormMessage className="text-red-500" />
             </FormItem>
           )}
         />
 
-         <FormField
+        <FormField
           control={form.control}
           name="tags"
           render={({ field }) => (
@@ -165,61 +177,57 @@ const Question = () => {
               </FormLabel>
               <FormControl className="mt-3.5">
                 <>
-                <Input
+                  <Input
                     className="no-focus paragraph-regular background-light900_dark300
                      light-border-2 text-dark300_light700 min-h-[56px] border"
-                     placeholder="Add tags ... "
-                     onKeyDown={ e => handleInputKeyDown(e, field)}
-                />
-                {field.value.length > 0  && (
-                   <div className="flex-start mt-2.5 gap-2.5">
-                     {field.value.map(tag => (
-                      <Badge
-                         key={tag}
-                         className="subtle-medium background-light800_dark300 text-light400_light500 flex-center
+                    placeholder="Add tags ... "
+                    onKeyDown={(e) => handleInputKeyDown(e, field)}
+                  />
+                  {field.value.length > 0 && (
+                    <div className="flex-start mt-2.5 gap-2.5">
+                      {field.value.map((tag) => (
+                        <Badge
+                          key={tag}
+                          className="subtle-medium background-light800_dark300 text-light400_light500 flex-center
                                    gap-2 rounded-md border-none px-4 py-2 capitalize"
-                         onClick={() => handleTagRemove(tag, field)}          
-                         >
-                         {tag}
-                         <Image
-                           src="/assets/icons/close.svg"
-                           alt="Close icon"
-                           width={12}
-                           height={12}
-                           className="cursor-pointer object-contain invert-0 dark:invert-1"
-                         />
-                      </Badge>
-                     ))}
-                   </div>
-                )}
+                          onClick={() => handleTagRemove(tag, field)}
+                        >
+                          {tag}
+                          <Image
+                            src="/assets/icons/close.svg"
+                            alt="Close icon"
+                            width={12}
+                            height={12}
+                            className="dark:invert-1 cursor-pointer object-contain invert-0"
+                          />
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
                 </>
               </FormControl>
               <FormDescription className="body-regular mt-2.5 text-light-500">
-                  Add up to 3 tags to describe what your question is about. You need to press enter to add a tag.
+                Add up to 3 tags to describe what your question is about. You
+                need to press enter to add a tag.
               </FormDescription>
-              <FormMessage className="text-red-500"/>
+              <FormMessage className="text-red-500" />
             </FormItem>
           )}
         />
         <Button
-           type="submit" 
-           className="primary-gradient w-fit !text-light-900"
-           disabled={isSubmitting}
-           >
+          type="submit"
+          className="primary-gradient w-fit !text-light-900"
+          disabled={isSubmitting}
+        >
           {isSubmitting ? (
-              <>
-                {type === "edit" ? "Editing..." : "Posting..."}
-              </>
-          )
-          : (
-            <>
-             {type === "edit" ? "Edit Question..." : "Ask a Question"}
-          </>
-           )}
+            <>{type === "edit" ? "Editing..." : "Posting..."}</>
+          ) : (
+            <>{type === "edit" ? "Edit Question..." : "Ask a Question"}</>
+          )}
         </Button>
       </form>
     </Form>
-  )
-}
+  );
+};
 
-export default Question
+export default Question;
