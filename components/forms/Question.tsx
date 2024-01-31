@@ -19,8 +19,7 @@ import { QuestionsSchema } from "@/lib/validations";
 import * as z from "zod";
 import { Badge } from "../ui/badge";
 import Image from "next/image";
-import { createQuestion } from "@/lib/actions/question.action";
-import error from "next/error";
+import axios from "axios";
 
 const type = "edit";
 
@@ -74,7 +73,8 @@ const Question = () => {
   const onSubmit = async (values: z.infer<typeof QuestionsSchema>) => {
     setIsSubmitting(true);
     try {
-      await createQuestion({});
+      const songs = await axios.post(`/api/question`);
+      console.log(songs);
     } catch (error) {
       console.log("call api error:", error);
     } finally {
