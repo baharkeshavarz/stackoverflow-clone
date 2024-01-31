@@ -1,7 +1,7 @@
 // import getCurrentUser from "@/actions/getCurrentUser";
-import db from "@/lib/mongo/db";
+import db from "@/lib/db";
 // eslint-disable-next-line import/no-named-default
-import { default as SongSchm } from "@/lib/mongo/models/Song";
+import { default as SongSchm } from "@/database/Song";
 // import { Song } from "@/types";
 import { NextRequest, NextResponse } from "next/server";
 
