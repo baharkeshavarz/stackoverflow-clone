@@ -9,6 +9,7 @@ export async function createQuestion(params: any) {
     db.connect();
     console.log("params");
     const { title, content, tags, author, path } = params;
+
     // Create Question
     const question = await Question.create({
       title,
@@ -18,13 +19,19 @@ export async function createQuestion(params: any) {
 
     const tagDocuments = [];
     // Create the tags or get them if they are already exits
-    for (const tag of tagDocuments) {
+    for (const tag of tags) {
       const existingTag = await Tag.findOneAndUpdate(
         { name: { $regex: new RegExp(`^${tag}$`, "i") } },
         { $setOnInsert: { name: tag }, $push: { question: question._id } },
         { upsert: true, new: true }
       );
+      tagDocuments.push(existingTag);
     }
+
+    // Add tags to inserted question
+    await Question.findByIdAndUpdate(question._id, {
+      $push: { tags: { $each: tagDocuments } },
+    });
 
     console.log(params);
   } catch (error) {

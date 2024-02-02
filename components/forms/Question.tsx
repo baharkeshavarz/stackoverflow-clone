@@ -19,7 +19,7 @@ import { QuestionsSchema } from "@/lib/validations";
 import * as z from "zod";
 import { Badge } from "../ui/badge";
 import Image from "next/image";
-import { createQuestion } from "@/lib/actions/question.action";
+import { createQuestion } from "@/lib/actions/question.actions";
 
 const type = "edit";
 
@@ -75,7 +75,9 @@ const Question = () => {
     try {
       console.log("call api");
       await createQuestion({
-        name: "test",
+        title: values.title,
+        content: values.explanation,
+        tags: values.tags,
       });
     } catch (error) {
       console.log("call api error:", error);
