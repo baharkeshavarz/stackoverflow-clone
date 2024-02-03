@@ -20,12 +20,18 @@ import * as z from "zod";
 import { Badge } from "../ui/badge";
 import Image from "next/image";
 import { createQuestion } from "@/lib/actions/question.actions";
+import { usePathname, useRouter } from "next/navigation";
 
 const type = "edit";
 
-const Question = () => {
+interface QuestionProps {
+  mongoUserId: string;
+}
+
+const Question = ( {mongoUserId }: QuestionProps) => {
   const editorRef = useRef(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof QuestionsSchema>>({
     resolver: zodResolver(QuestionsSchema),
@@ -73,14 +79,15 @@ const Question = () => {
   const onSubmit = async (values: z.infer<typeof QuestionsSchema>) => {
     setIsSubmitting(true);
     try {
-      console.log("call api");
       await createQuestion({
         title: values.title,
         content: values.explanation,
         tags: values.tags,
+        author: JSON.parse(mongoUserId),
       });
+
+      router.push("/");
     } catch (error) {
-      console.log("call api error:", error);
     } finally {
       setIsSubmitting(false);
     }

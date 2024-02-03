@@ -7,7 +7,6 @@ import Tag from "@/database/tag.model";
 export async function createQuestion(params: any) {
   try {
     db.connect();
-    console.log("params");
     const { title, content, tags, author, path } = params;
 
     // Create Question
@@ -32,9 +31,7 @@ export async function createQuestion(params: any) {
     await Question.findByIdAndUpdate(question._id, {
       $push: { tags: { $each: tagDocuments } },
     });
-
-    console.log(params);
   } catch (error) {
-    console.log("erroras");
+    console.log(error);
   }
 }
