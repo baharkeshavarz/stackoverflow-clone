@@ -70,7 +70,7 @@ const QuestionCard = ({
         <Metric
           imgUrl="/assets/icons/message.svg"
           alt="message"
-          value={formatAndDivideNumber(answers.length)}
+          value={formatAndDivideNumber(answers ? answers.length : 0)}
           title=" Answers"
           textStyles="small-medium text-dark400_light800"
         />
