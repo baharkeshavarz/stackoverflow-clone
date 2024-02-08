@@ -20,7 +20,7 @@ import * as z from "zod";
 import { Badge } from "../ui/badge";
 import Image from "next/image";
 import { createQuestion } from "@/lib/actions/question.actions";
-import { useParams, usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 const type = "edit";
 
@@ -28,7 +28,7 @@ interface QuestionProps {
   mongoUserId: string;
 }
 
-const Question = ( {mongoUserId }: QuestionProps) => {
+const Question = ({ mongoUserId }: QuestionProps) => {
   const editorRef = useRef(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
@@ -79,7 +79,7 @@ const Question = ( {mongoUserId }: QuestionProps) => {
 
   const onSubmit = async (values: z.infer<typeof QuestionsSchema>) => {
     setIsSubmitting(true);
-   
+
     try {
       await createQuestion({
         title: values.title,
