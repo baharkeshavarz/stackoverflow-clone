@@ -20,7 +20,7 @@ export const getTimeStamp = (timestamp: Date): string => {
   };
 
   for (const unit in intervals) {
-    if (intervals.hasOwnProperty(unit)) {
+    if (Object.prototype.hasOwnProperty.call(intervals, unit)) {
       const interval: number = Math.floor(seconds / intervals[unit]);
 
       if (interval >= 1) {
