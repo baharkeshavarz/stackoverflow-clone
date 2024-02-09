@@ -52,7 +52,7 @@ const QuestionCard = ({
       </div>
       <div className="mt-3 flex justify-between">
         <Metric
-          imgUrl="/assets/icons/avatar.svg"
+          imgUrl={author.picture}
           alt="user"
           value={author.name}
           title={` -asked ${getTimeStamp(createdAt)}`}
