@@ -3,6 +3,7 @@
 import {
   CreateUserParams,
   DeleteUserParams,
+  GetAllUserParams,
   UpdateUserParams,
 } from "@/types/shared.types";
 import db from "../db";
@@ -77,6 +78,20 @@ export async function deleteUser(params: DeleteUserParams) {
 
     const deleteUser = await User.findByIdAndDelete(user._id);
     return deleteUser;
+  } catch (error) {
+    console.log("error");
+    throw error;
+  }
+}
+
+export async function getAllUsers(params: GetAllUserParams) {
+  try {
+    db.connect();
+
+    // const { page = 1, pageSize = 20, filter, searchQuery } = params;
+    const users = await User.find({}).sort({ createdAt: -1 });
+
+    return { users };
   } catch (error) {
     console.log("error");
     throw error;
