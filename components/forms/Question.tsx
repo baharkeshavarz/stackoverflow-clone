@@ -233,11 +233,7 @@ const Question = ({ mongoUserId }: QuestionProps) => {
           className="primary-gradient w-fit !text-light-900"
           disabled={isSubmitting}
         >
-          {isSubmitting ? (
-            <>{type === "edit" ? "Editing..." : "Posting..."}</>
-          ) : (
-            <>{type === "edit" ? "Edit Question..." : "Ask a Question"}</>
-          )}
+          {isSubmitting ? "Posting" : "Ask a question"}
         </Button>
       </form>
     </Form>
