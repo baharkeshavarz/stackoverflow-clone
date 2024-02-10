@@ -22,7 +22,7 @@ import Image from "next/image";
 import { createQuestion } from "@/lib/actions/question.actions";
 import { usePathname, useRouter } from "next/navigation";
 
-const type = "insert";
+// const type = "insert";
 
 interface QuestionProps {
   mongoUserId: string;
