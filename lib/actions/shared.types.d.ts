@@ -24,3 +24,10 @@ export interface JobFilterParams {
   query: string;
   page: string;
 }
+
+export interface CreateAnswerParams {
+  author: string;
+  question: string;
+  content: string;
+  path: string;
+}
