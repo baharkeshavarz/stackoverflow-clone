@@ -87,7 +87,7 @@ export const BADGE_CRITERIA = {
 export const questions = [
   {
     _id: "1",
-    title: "Cascading Deltes in SQL",
+    title: "Cascading Deletes in SQL",
     tags: [
       { _id: "1", name: "python" },
       { _id: "2", name: "sql" },

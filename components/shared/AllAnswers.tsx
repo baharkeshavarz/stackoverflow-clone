@@ -26,7 +26,7 @@ const AllAnswers = async ({
   const result = await getAnswers({
     questionId,
   });
-  console.log("res", result);
+
   return (
     <div className="mt-11">
       <div className="flex items-center justify-between">

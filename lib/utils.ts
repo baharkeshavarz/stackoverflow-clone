@@ -32,12 +32,16 @@ export const getTimeStamp = (timestamp: Date): string => {
   return "just now";
 };
 
-export const formatAndDivideNumber = (number: number): string => {
-  if (Math.abs(number) >= 1e6) {
-    return (number / 1e6).toFixed(1) + "M";
-  } else if (Math.abs(number) >= 1e3) {
-    return (number / 1e3).toFixed(1) + "K";
+export const formatAndDivideNumber = (count: number): string => {
+  if (count !== undefined) {
+    if (Math.abs(count) >= 1e6) {
+      return (count / 1e6).toFixed(1) + "M";
+    } else if (Math.abs(count) >= 1e3) {
+      return (count / 1e3).toFixed(1) + "K";
+    } else {
+      return count.toString();
+    }
   } else {
-    return number.toString();
+    return "0";
   }
 };

@@ -13,7 +13,7 @@ Key Features:
 
 # The technologies:
 
-- using webhooks to sync data beetween clerk and Mongodb
+- using webhooks to sync data between clerk and Mongodb
 
 # Webhook
 
