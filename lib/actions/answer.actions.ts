@@ -1,6 +1,6 @@
 "use server";
 
-import Answer from "@/database/anwser.model";
+import Answer from "@/database/answer.model";
 import db from "../db";
 import { CreateAnswerParams, GetAnswersParams } from "./shared.types";
 import Question from "@/database/question.model";

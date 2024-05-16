@@ -8,7 +8,7 @@ import { getTimeStamp } from "@/lib/utils";
 import ParseHTML from "./ParseHTML";
 import Votes from "./Votes";
 
-interface AllAnwsersProps {
+interface AllAnswersProps {
   questionId: string;
   userId: string;
   totalAnswers: number;
@@ -16,13 +16,13 @@ interface AllAnwsersProps {
   filter?: number;
 }
 
-const AllAnwsers = async ({
+const AllAnswers = async ({
   questionId,
   userId,
   totalAnswers,
   page,
   filter,
-}: AllAnwsersProps) => {
+}: AllAnswersProps) => {
   const result = await getAnswers({
     questionId,
   });
@@ -72,4 +72,4 @@ const AllAnwsers = async ({
   );
 };
 
-export default AllAnwsers;
+export default AllAnswers;

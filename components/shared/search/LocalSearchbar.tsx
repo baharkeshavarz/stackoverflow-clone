@@ -4,7 +4,7 @@ import React from "react";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
 
-interface LocalSearchbarProps {
+interface LocalSearchBarProps {
   route: string;
   iconPosition: string;
   imgSrc: string;
@@ -12,13 +12,13 @@ interface LocalSearchbarProps {
   otherClasses: string;
 }
 
-const LocalSearchbar = ({
+const LocalSearchBar = ({
   route,
   iconPosition,
   imgSrc,
   placeholder,
   otherClasses,
-}: LocalSearchbarProps) => {
+}: LocalSearchBarProps) => {
   return (
     <div
       className={`background-light800_dark400 relative flex min-h-[56px] w-full grow items-center justify-center gap-4 rounded-[10px] px-4 ${otherClasses}`}
@@ -52,4 +52,4 @@ const LocalSearchbar = ({
   );
 };
 
-export default LocalSearchbar;
+export default LocalSearchBar;
