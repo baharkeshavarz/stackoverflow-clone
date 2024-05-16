@@ -87,8 +87,6 @@ export async function deleteUser(params: DeleteUserParams) {
 export async function getAllUsers(params: GetAllUserParams) {
   try {
     db.connect();
-
-    // const { page = 1, pageSize = 20, filter, searchQuery } = params;
     const users = await User.find({}).sort({ createdAt: -1 });
 
     return { users };

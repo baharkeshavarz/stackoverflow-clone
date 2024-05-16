@@ -1,7 +1,12 @@
 "use client";
 
+import {
+  downvoteQuestion,
+  upvoteQuestion,
+} from "@/lib/actions/question.actions";
 import { formatAndDivideNumber } from "@/lib/utils";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import React from "react";
 
 interface VotesProps {
@@ -25,7 +30,56 @@ const Votes = ({
   hasdownVoted,
   hasSaved,
 }: VotesProps) => {
-  const handleVote = (action: string) => {};
+  const pathname = usePathname();
+  // const router = useRouter();
+
+  const handleVote = async (action: string) => {
+    if (!userId) return;
+    if (action === "upvote") {
+      if (type === "Question") {
+        await upvoteQuestion({
+          questionId: JSON.parse(itemId),
+          userId: JSON.parse(userId),
+          hasupVoted,
+          hasdownVoted,
+          path: pathname,
+        });
+      } else if (type === "Answer") {
+        // await upvoteAnswer({
+        //   questionId: JSON.parse(itemId),
+        //   userId: JSON.parse(userId),
+        //   hasupVoted,
+        //   hasdownVoted,
+        //   path: pathname,
+        // });
+      }
+
+      // todo: show the toast
+    }
+
+    if (action === "downvote") {
+      if (type === "Question") {
+        await downvoteQuestion({
+          questionId: JSON.parse(itemId),
+          userId: JSON.parse(userId),
+          hasupVoted,
+          hasdownVoted,
+          path: pathname,
+        });
+      } else if (type === "Answer") {
+        // await downvoteAnswer({
+        //   questionId: JSON.parse(itemId),
+        //   userId: JSON.parse(userId),
+        //   hasupVoted,
+        //   hasdownVoted,
+        //   path: pathname,
+        // });
+      }
+
+      // todo: show the toast
+    }
+  };
+
   const handleSave = () => {};
   return (
     <div className="flex gap-5">
