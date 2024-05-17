@@ -1,4 +1,4 @@
-import LocalSearchBar from "@/components/shared/search/LocalSearchBar";
+import LocalSearchbar from "@/components/shared/search/LocalSearchbar";
 import { TagFilters } from "@/constants/filters";
 import React from "react";
 import Filter from "@/components/shared/search/Filter";
@@ -12,7 +12,7 @@ const TagsPage = async () => {
     <>
       <h1 className="h1-bold text-dark100_light900">All Tags</h1>
       <div className="mt-11 flex flex-col gap-4 sm:flex-row sm:justify-between">
-        <LocalSearchBar
+        <LocalSearchbar
           route="/tags"
           iconPosition="left"
           imgSrc="/assets/icons/search.svg"

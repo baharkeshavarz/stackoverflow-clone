@@ -1,7 +1,7 @@
 import QuestionCard from "@/components/cards/QuestionCard";
 import NoResult from "@/components/shared/NoResult";
 import Filter from "@/components/shared/search/Filter";
-import LocalSearchBar from "@/components/shared/search/LocalSearchBar";
+import LocalSearchbar from "@/components/shared/search/LocalSearchbar";
 import { QuestionFilters } from "@/constants/filters";
 import { getSavedQuestions } from "@/lib/actions/user.actions";
 import { auth } from "@clerk/nextjs";
@@ -17,7 +17,7 @@ export default async function Home() {
     <>
       <h1 className="h1-bold text-dark100_light900">Saved Questions</h1>
       <div className="mt-11 flex flex-col gap-4 sm:flex-row sm:justify-between">
-        <LocalSearchBar
+        <LocalSearchbar
           route="/"
           iconPosition="left"
           imgSrc="/assets/icons/search.svg"
