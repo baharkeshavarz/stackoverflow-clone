@@ -78,7 +78,6 @@ export async function getQuestionById(params: GetQuestionByIdParams) {
 }
 
 export async function upvoteQuestion(params: QuestionVoteParams) {
-  console.log(params);
   try {
     db.connect();
     const { questionId, userId, hasupVoted, hasdownVoted, path } = params;

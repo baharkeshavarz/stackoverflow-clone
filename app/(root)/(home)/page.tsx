@@ -44,9 +44,9 @@ export default async function Home() {
               key={question._id}
               _id={question._id}
               title={question.title}
-              answers={question.answers}
+              answers={question.answers.length}
               author={question.author}
-              upvotes={question.upvotes}
+              upvotes={question.upvotes.length}
               views={question.views}
               tags={question.tags}
               createdAt={question.createdAt}
@@ -55,7 +55,7 @@ export default async function Home() {
         ) : (
           <NoResult
             title="Theres's no question to answer."
-            description=" Be the first to break the silence! Ask a Question and kickstart the
+            description="Be the first to break the silence! Ask a Question and kickstart the
               discussion. Our query could be the next big thing others learn from. Get
               involved!"
             link="/ask-question"
