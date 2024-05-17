@@ -14,7 +14,7 @@ import { revalidatePath } from "next/cache";
 
 export async function getQuestions(params: GetQuestionParams) {
   try {
-    db.connect();
+    await db.connect();
     const questions = await Question.find({})
       .populate({ path: "tags", model: Tag })
       .populate({ path: "author", model: User })
@@ -28,7 +28,7 @@ export async function getQuestions(params: GetQuestionParams) {
 
 export async function createQuestion(params: CreateQuestionParams) {
   try {
-    db.connect();
+    await db.connect();
     const { title, content, tags, author, path } = params;
     // Create Question
     const question = await Question.create({
@@ -61,7 +61,7 @@ export async function createQuestion(params: CreateQuestionParams) {
 
 export async function getQuestionById(params: GetQuestionByIdParams) {
   try {
-    db.connect();
+    await db.connect();
     const { questionId } = params;
     const question = await Question.findById(questionId)
       .populate({ path: "tags", model: Tag, select: "_id name" })
@@ -79,7 +79,7 @@ export async function getQuestionById(params: GetQuestionByIdParams) {
 
 export async function upvoteQuestion(params: QuestionVoteParams) {
   try {
-    db.connect();
+    await db.connect();
     const { questionId, userId, hasupVoted, hasdownVoted, path } = params;
 
     let updateQuery = {};
@@ -112,7 +112,7 @@ export async function upvoteQuestion(params: QuestionVoteParams) {
 
 export async function downvoteQuestion(params: QuestionVoteParams) {
   try {
-    db.connect();
+    await db.connect();
     const { questionId, userId, hasupVoted, hasdownVoted, path } = params;
 
     let updateQuery = {};

@@ -4,22 +4,25 @@ import {
   CreateUserParams,
   DeleteUserParams,
   GetAllUserParams,
+  GetSavedQuestionsParams,
   ToggleSaveQuestionParams,
   UpdateUserParams,
 } from "@/types/shared.types";
 import db from "../db";
-import User from "@/database/user.model";
 import { revalidatePath } from "next/cache";
 import Question from "@/database/question.model";
+import Tag from "@/database/tag.model";
+import User from "@/database/user.model";
+// import FilterQuery from "mongodb";
 
 export async function getUserById(params: any) {
   try {
-    db.connect();
+    await db.connect();
     const { userId } = params;
 
     // Find user
     const user = await User.findOne({
-      clerckId: userId,
+      clerkId: userId,
     });
     return user;
   } catch (error) {
@@ -30,7 +33,7 @@ export async function getUserById(params: any) {
 
 export async function createUser(userData: CreateUserParams) {
   try {
-    db.connect();
+    await db.connect();
 
     const newUser = await User.create(userData);
     return newUser;
@@ -42,7 +45,7 @@ export async function createUser(userData: CreateUserParams) {
 
 export async function updateUser(params: UpdateUserParams) {
   try {
-    db.connect();
+    await db.connect();
 
     const { clerkId, updateData, path } = params;
     await User.findOneAndUpdate({ clerkId }, updateData, {
@@ -57,7 +60,7 @@ export async function updateUser(params: UpdateUserParams) {
 
 export async function deleteUser(params: DeleteUserParams) {
   try {
-    db.connect();
+    await db.connect();
 
     const { clerkId } = params;
     const user = await User.findOneAndDelete({ clerkId });
@@ -87,7 +90,7 @@ export async function deleteUser(params: DeleteUserParams) {
 
 export async function getAllUsers(params: GetAllUserParams) {
   try {
-    db.connect();
+    await db.connect();
     const users = await User.find({}).sort({ createdAt: -1 });
 
     return { users };
@@ -99,7 +102,7 @@ export async function getAllUsers(params: GetAllUserParams) {
 
 export async function toggleSaveQuestion(params: ToggleSaveQuestionParams) {
   try {
-    db.connect();
+    await db.connect();
     const { userId, questionId, path } = params;
     const user = await User.findById(userId);
     if (!user) {
@@ -124,6 +127,41 @@ export async function toggleSaveQuestion(params: ToggleSaveQuestionParams) {
     }
 
     revalidatePath(path);
+  } catch (error) {
+    console.log("error");
+    throw error;
+  }
+}
+
+export async function getSavedQuestions(params: GetSavedQuestionsParams) {
+  try {
+    await db.connect();
+    const { clerkId, page = 1, pageSize = 10, searchQuery = "" } = params;
+
+    const query = searchQuery
+      ? { title: { $regex: new RegExp(searchQuery, "i") } }
+      : {}; // query : FilterQuery<typeof Question>
+
+    const user = await User.findOne({ clerkId }).populate({
+      path: "saved",
+      match: query,
+      options: {
+        sort: { createdAt: -1 },
+        skip: (page - 1) * pageSize,
+        limit: pageSize,
+      },
+      populate: [
+        { path: "tags", model: Tag, select: "_id name" },
+        { path: "author", model: User, select: "_id clerkId name picture" },
+      ],
+    });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const savedQuestions = user.saved;
+    return { questions: savedQuestions };
   } catch (error) {
     console.log("error");
     throw error;

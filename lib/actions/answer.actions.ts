@@ -12,10 +12,11 @@ import { revalidatePath } from "next/cache";
 
 export async function createAnswer(params: CreateAnswerParams) {
   try {
-    db.connect();
+    await db.connect();
 
     const { content, author, question, path } = params;
     const newAnswer = await Answer.create({ content, author, question });
+    console.log("newAnswer:", newAnswer);
 
     // Add the answer to the question's answers array
     await Question.findByIdAndUpdate(question, {
@@ -30,7 +31,7 @@ export async function createAnswer(params: CreateAnswerParams) {
 
 export async function getAnswers(params: GetAnswersParams) {
   try {
-    db.connect();
+    await db.connect();
 
     const { questionId } = params;
     const answers = await Answer.find({ question: questionId })
@@ -44,7 +45,7 @@ export async function getAnswers(params: GetAnswersParams) {
 
 export async function upvoteAnswer(params: AnswerVoteParams) {
   try {
-    db.connect();
+    await db.connect();
     const { answerId, userId, hasupVoted, hasdownVoted, path } = params;
 
     let updateQuery = {};
@@ -77,7 +78,7 @@ export async function upvoteAnswer(params: AnswerVoteParams) {
 
 export async function downvoteAnswer(params: AnswerVoteParams) {
   try {
-    db.connect();
+    await db.connect();
     const { answerId, userId, hasupVoted, hasdownVoted, path } = params;
 
     let updateQuery = {};

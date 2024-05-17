@@ -33,7 +33,6 @@ const Votes = ({
   hasSaved,
 }: VotesProps) => {
   const pathname = usePathname();
-  // const router = useRouter();
 
   const handleVote = async (action: string) => {
     if (!userId) return;
