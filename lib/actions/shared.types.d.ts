@@ -54,3 +54,8 @@ export interface AnswerVoteParams {
   hasdownVoted: boolean;
   path: string;
 }
+
+export interface ViewQuestionParams {
+  questionId: string;
+  userId: string | undefined;
+}
