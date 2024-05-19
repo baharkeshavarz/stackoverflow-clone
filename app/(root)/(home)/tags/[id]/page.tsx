@@ -1,32 +1,26 @@
 import QuestionCard from "@/components/cards/QuestionCard";
 import NoResult from "@/components/shared/NoResult";
-import Filter from "@/components/shared/search/Filter";
 import LocalSearchbar from "@/components/shared/search/LocalSearchbar";
-import { QuestionFilters } from "@/constants/filters";
-import { getSavedQuestions } from "@/lib/actions/user.actions";
-import { auth } from "@clerk/nextjs";
+import { getQuestionsByTagId } from "@/lib/actions/tag.actions";
+import { URLProps } from "@/types/index";
+import React from "react";
 
-export default async function Home() {
-  const { userId } = auth();
-  if (!userId) return null;
-
-  const result = await getSavedQuestions({
-    clerkId: userId
+const Page = async ({ params, searchParams }: URLProps) => {
+  const result = await getQuestionsByTagId({
+    tagId: params.id,
+    page: 1,
+    searchQuery: searchParams.q
   });
   return (
     <>
-      <h1 className="h1-bold text-dark100_light900">Saved Questions</h1>
-      <div className="mt-11 flex flex-col gap-4 sm:flex-row sm:justify-between">
+      <h1 className="h1-bold text-dark100_light900">{result.tagTitle}</h1>
+      <div className="mt-11 w-full">
         <LocalSearchbar
           route="/"
           iconPosition="left"
           imgSrc="/assets/icons/search.svg"
-          placeholder="Search for Questions"
+          placeholder="Search tag Questions"
           otherClasses="flex-1"
-        />
-        <Filter
-          filters={QuestionFilters}
-          otherClasses="min-h-[56px] sm:min-w-[170px]"
         />
       </div>
       <div className="mt-10 flex w-full flex-col gap-6">
@@ -46,7 +40,7 @@ export default async function Home() {
           ))
         ) : (
           <NoResult
-            title="Theres's no question saved to answer."
+            title="Theres's no tag question saved to answer."
             description="Be the first to break the silence! Ask a Question and kickstart the
               discussion. Our query could be the next big thing others learn from. Get
               involved!"
@@ -57,4 +51,6 @@ export default async function Home() {
       </div>
     </>
   );
-}
+};
+
+export default Page;

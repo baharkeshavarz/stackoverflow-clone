@@ -6,7 +6,7 @@ import {
   GetAllUserParams,
   GetSavedQuestionsParams,
   ToggleSaveQuestionParams,
-  UpdateUserParams,
+  UpdateUserParams
 } from "@/types/shared.types";
 import db from "../db";
 import { revalidatePath } from "next/cache";
@@ -22,7 +22,7 @@ export async function getUserById(params: any) {
 
     // Find user
     const user = await User.findOne({
-      clerkId: userId,
+      clerkId: userId
     });
     return user;
   } catch (error) {
@@ -49,7 +49,7 @@ export async function updateUser(params: UpdateUserParams) {
 
     const { clerkId, updateData, path } = params;
     await User.findOneAndUpdate({ clerkId }, updateData, {
-      new: true,
+      new: true
     });
     revalidatePath(path);
   } catch (error) {
@@ -70,7 +70,7 @@ export async function deleteUser(params: DeleteUserParams) {
 
     // delete all questions, answers, comments, etc.
 
-    // get user quesions ids
+    // get user questions ids
     // const userQuestionIds = await Question.find({ author: user._id }).distinct(
     //   "_id"
     // );
@@ -137,7 +137,6 @@ export async function getSavedQuestions(params: GetSavedQuestionsParams) {
   try {
     await db.connect();
     const { clerkId, page = 1, pageSize = 10, searchQuery = "" } = params;
-
     const query = searchQuery
       ? { title: { $regex: new RegExp(searchQuery, "i") } }
       : {}; // query : FilterQuery<typeof Question>
@@ -148,12 +147,12 @@ export async function getSavedQuestions(params: GetSavedQuestionsParams) {
       options: {
         sort: { createdAt: -1 },
         skip: (page - 1) * pageSize,
-        limit: pageSize,
+        limit: pageSize
       },
       populate: [
         { path: "tags", model: Tag, select: "_id name" },
-        { path: "author", model: User, select: "_id clerkId name picture" },
-      ],
+        { path: "author", model: User, select: "_id clerkId name picture" }
+      ]
     });
 
     if (!user) {

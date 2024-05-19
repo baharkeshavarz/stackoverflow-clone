@@ -2,7 +2,8 @@
 
 import {
   GetAllTagsParams,
-  GetTopInteractedTagsParams,
+  GetQuestionsByTagIdParams,
+  GetTopInteractedTagsParams
 } from "@/types/shared.types";
 import db from "../db";
 import User from "@/database/user.model";
@@ -24,7 +25,7 @@ export async function getTopInteractedTags(params: GetTopInteractedTagsParams) {
     return [
       { _id: "1", name: "tag1" },
       { _id: "2", name: "tag2" },
-      { _id: "3", name: "tag3" },
+      { _id: "3", name: "tag3" }
     ];
   } catch (error) {
     console.log("error");
@@ -37,6 +38,40 @@ export async function getAllTags(params: GetAllTagsParams) {
     db.connect();
     const tags = await Tag.find({});
     return { tags };
+  } catch (error) {
+    console.log("error");
+    throw error;
+  }
+}
+
+export async function getQuestionsByTagId(params: GetQuestionsByTagIdParams) {
+  try {
+    db.connect();
+    const { tagId, page = 1, pageSize = 10, searchQuery = "" } = params;
+    const tagFilter = searchQuery ? { _id: tagId } : {};
+
+    const tag = await Tag.findOne(tagFilter).populate({
+      path: "questions",
+      match: searchQuery
+        ? { title: { $regex: searchQuery, $options: "i" } }
+        : {},
+      options: {
+        sort: { createdAt: -1 },
+        skip: (page - 1) * pageSize,
+        limit: pageSize
+      },
+      populate: [
+        { path: "tags", model: Tag, select: "_id name" },
+        { path: "author", model: User, select: "_id clerkId name picture" }
+      ]
+    });
+
+    if (!tag) {
+      throw new Error("Tag not found");
+    }
+
+    const questions = tag.questions;
+    return { tagTitle: tag.name, questions };
   } catch (error) {
     console.log("error");
     throw error;
