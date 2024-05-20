@@ -20,7 +20,7 @@ import { createAnswer } from "@/lib/actions/answer.actions";
 import { usePathname } from "next/navigation";
 
 interface AnswerProps {
-  question: string;
+  question: any;
   questionId: string;
   authorId: string;
 }
@@ -40,7 +40,6 @@ const Answer = ({ question, questionId, authorId }: AnswerProps) => {
   const pathname = usePathname();
 
   const handleCreateAnswer = async (values: z.infer<typeof AnswerSchema>) => {
-    console.log("answers:", values);
     setIsSubmitting(true);
     try {
       await createAnswer({

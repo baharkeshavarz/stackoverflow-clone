@@ -13,10 +13,8 @@ import { revalidatePath } from "next/cache";
 export async function createAnswer(params: CreateAnswerParams) {
   try {
     await db.connect();
-
     const { content, author, question, path } = params;
     const newAnswer = await Answer.create({ content, author, question });
-    console.log("newAnswer:", newAnswer);
 
     // Add the answer to the question's answers array
     await Question.findByIdAndUpdate(question, {

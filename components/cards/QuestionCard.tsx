@@ -6,7 +6,7 @@ import { formatAndDivideNumber, getTimeStamp } from "@/lib/utils";
 
 interface QuestionCardProps {
   _id: string;
-  clerkId?: string;
+  clerkId?: string | null;
   title: string;
   answers: Array<Object>;
   author: {

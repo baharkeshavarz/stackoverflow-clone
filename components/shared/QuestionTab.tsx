@@ -4,7 +4,7 @@ import QuestionCard from "../cards/QuestionCard";
 
 interface QuestionTabProps extends SearchParamsProps {
   userId: string;
-  clerkId?: string;
+  clerkId?: string | null;
 }
 
 const QuestionTab = async ({
