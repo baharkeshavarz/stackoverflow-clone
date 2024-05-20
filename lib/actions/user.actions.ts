@@ -5,6 +5,7 @@ import {
   DeleteUserParams,
   GetAllUserParams,
   GetSavedQuestionsParams,
+  GetUserByIdParams,
   ToggleSaveQuestionParams,
   UpdateUserParams
 } from "@/types/shared.types";
@@ -13,6 +14,7 @@ import { revalidatePath } from "next/cache";
 import Question from "@/database/question.model";
 import Tag from "@/database/tag.model";
 import User from "@/database/user.model";
+import Answer from "@/database/answer.model";
 // import FilterQuery from "mongodb";
 
 export async function getUserById(params: any) {
@@ -161,6 +163,26 @@ export async function getSavedQuestions(params: GetSavedQuestionsParams) {
 
     const savedQuestions = user.saved;
     return { questions: savedQuestions };
+  } catch (error) {
+    console.log("error");
+    throw error;
+  }
+}
+
+export async function getUserInfo(params: GetUserByIdParams) {
+  try {
+    await db.connect();
+    const { userId } = params;
+    const user = await User.findOne({ clerkId: userId });
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    // Find related data to user
+    const totalQuestions = await Question.countDocuments({ author: user._id });
+    const totalAnswers = await Answer.countDocuments({ author: user._id });
+
+    return { user, totalQuestions, totalAnswers };
   } catch (error) {
     console.log("error");
     throw error;

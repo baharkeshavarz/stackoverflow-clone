@@ -16,7 +16,7 @@ export const getTimeStamp = (timestamp: Date): string => {
     week: 604800,
     day: 86400,
     hour: 3600,
-    minute: 60,
+    minute: 60
   };
 
   for (const unit in intervals) {
@@ -44,4 +44,11 @@ export const formatAndDivideNumber = (count: number): string => {
   } else {
     return "0";
   }
+};
+
+export const getJoinedDate = (date: Date): string => {
+  const month = date.toLocaleString("default", { month: "long" });
+  const year = date.getFullYear();
+
+  return `${month} ${year}`;
 };
