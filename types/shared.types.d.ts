@@ -69,3 +69,9 @@ export interface GetSavedQuestionsParams {
   filter?: string;
   searchQuery?: string;
 }
+
+export interface GetUserStatsParams {
+  userId: string;
+  page?: number;
+  pageSize?: number;
+}

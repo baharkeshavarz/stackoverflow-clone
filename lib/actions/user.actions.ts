@@ -6,8 +6,9 @@ import {
   GetAllUserParams,
   GetSavedQuestionsParams,
   GetUserByIdParams,
+  GetUserStatsParams,
   ToggleSaveQuestionParams,
-  UpdateUserParams
+  UpdateUserParams,
 } from "@/types/shared.types";
 import db from "../db";
 import { revalidatePath } from "next/cache";
@@ -24,7 +25,7 @@ export async function getUserById(params: any) {
 
     // Find user
     const user = await User.findOne({
-      clerkId: userId
+      clerkId: userId,
     });
     return user;
   } catch (error) {
@@ -51,7 +52,7 @@ export async function updateUser(params: UpdateUserParams) {
 
     const { clerkId, updateData, path } = params;
     await User.findOneAndUpdate({ clerkId }, updateData, {
-      new: true
+      new: true,
     });
     revalidatePath(path);
   } catch (error) {
@@ -149,12 +150,12 @@ export async function getSavedQuestions(params: GetSavedQuestionsParams) {
       options: {
         sort: { createdAt: -1 },
         skip: (page - 1) * pageSize,
-        limit: pageSize
+        limit: pageSize,
       },
       populate: [
         { path: "tags", model: Tag, select: "_id name" },
-        { path: "author", model: User, select: "_id clerkId name picture" }
-      ]
+        { path: "author", model: User, select: "_id clerkId name picture" },
+      ],
     });
 
     if (!user) {
@@ -183,6 +184,23 @@ export async function getUserInfo(params: GetUserByIdParams) {
     const totalAnswers = await Answer.countDocuments({ author: user._id });
 
     return { user, totalQuestions, totalAnswers };
+  } catch (error) {
+    console.log("error");
+    throw error;
+  }
+}
+
+export async function getUserQuestions(params: GetUserStatsParams) {
+  try {
+    await db.connect();
+    const { userId } = params;
+    //, page = 1, pageSize = 10
+    const totalQuestions = await Question.countDocuments({ author: userId });
+    const userQuestions = await Question.find({ author: userId })
+      .sort({ views: -1, upvotes: -1 })
+      .populate("tags", "_id name")
+      .populate("author", "_id clerkId name picture");
+    return { totalQuestions, questions: userQuestions };
   } catch (error) {
     console.log("error");
     throw error;

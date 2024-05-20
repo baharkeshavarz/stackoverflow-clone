@@ -46,6 +46,11 @@ const Stats = ({ totalQuestions, totalAnswers }: StatsProps) => {
           </div>
         </div>
         <StatsCard
+          imgUrl="/assets/icons/gold-medal.svg"
+          value={0}
+          title="Gold Badges"
+        />
+        <StatsCard
           imgUrl="/assets/icons/silver-medal.svg"
           value={0}
           title="Silver Badges"
