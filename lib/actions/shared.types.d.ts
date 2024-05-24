@@ -69,3 +69,10 @@ export interface DeleteAnswerParams {
   answerId: string;
   path: string;
 }
+
+export interface EditQuestionParams {
+  questionId: string;
+  title: string;
+  content: string;
+  path: string;
+}
