@@ -59,3 +59,13 @@ export interface ViewQuestionParams {
   questionId: string;
   userId: string | undefined;
 }
+
+export interface DeleteQuestionParams {
+  questionId: string;
+  path: string;
+}
+
+export interface DeleteAnswerParams {
+  answerId: string;
+  path: string;
+}
