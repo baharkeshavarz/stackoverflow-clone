@@ -207,7 +207,7 @@ const Question = ({ type, mongoUserId, questionDetails }: QuestionProps) => {
               <FormControl className="mt-3.5">
                 <>
                   <Input
-                    className="no-focus paragraph-regular background-light900_dark300
+                    className="no-focus paragraph-regular background-light700_dark300
                      light-border-2 text-dark300_light700 min-h-[56px] border"
                     placeholder="Add tags ... "
                     disabled={type === "Edit"}
