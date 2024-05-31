@@ -3,7 +3,7 @@
 import {
   GetAllTagsParams,
   GetQuestionsByTagIdParams,
-  GetTopInteractedTagsParams
+  GetTopInteractedTagsParams,
 } from "@/types/shared.types";
 import db from "../db";
 import User from "@/database/user.model";
@@ -25,7 +25,7 @@ export async function getTopInteractedTags(params: GetTopInteractedTagsParams) {
     return [
       { _id: "1", name: "tag1" },
       { _id: "2", name: "tag2" },
-      { _id: "3", name: "tag3" }
+      { _id: "3", name: "tag3" },
     ];
   } catch (error) {
     console.log("error");
@@ -58,12 +58,12 @@ export async function getQuestionsByTagId(params: GetQuestionsByTagIdParams) {
       options: {
         sort: { createdAt: -1 },
         skip: (page - 1) * pageSize,
-        limit: pageSize
+        limit: pageSize,
       },
       populate: [
         { path: "tags", model: Tag, select: "_id name" },
-        { path: "author", model: User, select: "_id clerkId name picture" }
-      ]
+        { path: "author", model: User, select: "_id clerkId name picture" },
+      ],
     });
 
     if (!tag) {
@@ -72,6 +72,22 @@ export async function getQuestionsByTagId(params: GetQuestionsByTagIdParams) {
 
     const questions = tag.questions;
     return { tagTitle: tag.name, questions };
+  } catch (error) {
+    console.log("error");
+    throw error;
+  }
+}
+
+export async function getPopularTags() {
+  try {
+    db.connect();
+    const popularTags = await Tag.aggregate([
+      { $project: { name: 1, numberOfQuestions: { $size: "$questions" } } },
+      { $sort: { numberOfQuestions: -1 } },
+      { $limit: 5 },
+    ]);
+    // we add numberOfQuestions to the tags object, it's not originally in tag document
+    return popularTags;
   } catch (error) {
     console.log("error");
     throw error;

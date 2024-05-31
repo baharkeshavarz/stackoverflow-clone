@@ -3,17 +3,11 @@ import Image from "next/image";
 import React from "react";
 import RenderTag from "./RenderTag";
 import { getHotQuestions } from "@/lib/actions/question.actions";
-
-const popularTags = [
-  { _id: 1, name: "Javascript", totalQuestions: 3 },
-  { _id: 2, name: "next", totalQuestions: 4 },
-  { _id: 3, name: "vue", totalQuestions: 1 },
-  { _id: 4, name: "react", totalQuestions: 23 },
-  { _id: 5, name: "PHP", totalQuestions: 7 },
-];
+import { getPopularTags } from "@/lib/actions/tag.actions";
 
 const RightSidebar = async () => {
   const hotQuestions = await getHotQuestions();
+  const popularTags = await getPopularTags();
   return (
     <section
       className="background-light900_dark200 custom-scrollbar sticky right-0 top-0 flex
@@ -53,7 +47,7 @@ const RightSidebar = async () => {
               key={tag._id}
               _id={tag._id.toString()}
               name={tag.name}
-              totalQuestions={tag.totalQuestions}
+              totalQuestions={tag.numberOfQuestions}
               showContent
             />
           ))}
