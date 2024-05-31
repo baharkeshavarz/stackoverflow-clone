@@ -2,14 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import React from "react";
 import RenderTag from "./RenderTag";
-
-const hotQuestions = [
-  { _id: 1, title: "What is the dumbest way you've been hurt?" },
-  { _id: 2, title: "What are the three scents you like?" },
-  { _id: 3, title: "What sport will be invented next?" },
-  { _id: 4, title: "What’s your favorite board game?" },
-  { _id: 5, title: "Would you rather have intelligence over looks?" },
-];
+import { getHotQuestions } from "@/lib/actions/question.actions";
 
 const popularTags = [
   { _id: 1, name: "Javascript", totalQuestions: 3 },
@@ -19,7 +12,8 @@ const popularTags = [
   { _id: 5, name: "PHP", totalQuestions: 7 },
 ];
 
-const RightSidebar = () => {
+const RightSidebar = async () => {
+  const hotQuestions = await getHotQuestions();
   return (
     <section
       className="background-light900_dark200 custom-scrollbar sticky right-0 top-0 flex
@@ -30,24 +24,25 @@ const RightSidebar = () => {
       <div>
         <h3 className="h3-bold text-dark200_light900">Top Questions</h3>
         <div className="mt-7 flex flex-col gap-[30px]">
-          {hotQuestions.map((question) => (
-            <Link
-              key={question._id}
-              href={`/question/${question._id}`}
-              className="flex items-center justify-between gap-7"
-            >
-              <p className="body-medium text-dark500_light700">
-                {question.title}
-              </p>
-              <Image
-                src="/assets/icons/chevron-right.svg"
-                alt="Chevron right"
-                width={20}
-                height={20}
-                className="invert-colors"
-              />
-            </Link>
-          ))}
+          {hotQuestions &&
+            hotQuestions.map((question) => (
+              <Link
+                key={question._id}
+                href={`/question/${question._id}`}
+                className="flex items-center justify-between gap-7"
+              >
+                <p className="body-medium text-dark500_light700">
+                  {question.title}
+                </p>
+                <Image
+                  src="/assets/icons/chevron-right.svg"
+                  alt="Chevron right"
+                  width={20}
+                  height={20}
+                  className="invert-colors"
+                />
+              </Link>
+            ))}
         </div>
       </div>
       <div className="mt-16">
