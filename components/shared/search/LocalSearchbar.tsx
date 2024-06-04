@@ -48,7 +48,6 @@ const LocalSearchbar = ({
     }, 300);
     return () => clearTimeout(delayDebounceFn);
   }, [search, searchParams, pathname, router, route]);
-
   return (
     <div
       className={`background-light800_dark400 relative flex min-h-[56px] w-full grow items-center justify-center gap-4 rounded-[10px] px-4 ${otherClasses}`}
