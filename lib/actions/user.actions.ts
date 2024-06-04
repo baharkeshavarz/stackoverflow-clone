@@ -16,6 +16,7 @@ import Question from "@/database/question.model";
 import Tag from "@/database/tag.model";
 import User from "@/database/user.model";
 import Answer from "@/database/answer.model";
+import { FilterQuery } from "mongoose";
 // import FilterQuery from "mongodb";
 
 export async function getUserById(params: any) {
@@ -93,7 +94,17 @@ export async function deleteUser(params: DeleteUserParams) {
 export async function getAllUsers(params: GetAllUserParams) {
   try {
     await db.connect();
-    const users = await User.find({}).sort({ createdAt: -1 });
+    const { searchQuery } = params;
+    const query: FilterQuery<typeof User> = {};
+
+    if (searchQuery) {
+      query.$or = [
+        { name: { $regex: new RegExp(searchQuery, "i") } },
+        { username: { $regex: new RegExp(searchQuery, "i") } },
+      ];
+    }
+
+    const users = await User.find(query).sort({ createdAt: -1 });
 
     return { users };
   } catch (error) {
