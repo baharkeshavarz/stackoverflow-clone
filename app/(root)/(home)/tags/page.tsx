@@ -5,9 +5,12 @@ import Filter from "@/components/shared/search/Filter";
 import NoResult from "@/components/shared/NoResult";
 import { getAllTags } from "@/lib/actions/tag.actions";
 import Link from "next/link";
+import { SearchParamsProps } from "@/types/index";
 
-const TagsPage = async () => {
-  const result = await getAllTags({});
+const TagsPage = async ({ searchParams }: SearchParamsProps) => {
+  const result = await getAllTags({
+    searchQuery: searchParams.q,
+  });
   return (
     <>
       <h1 className="h1-bold text-dark100_light900">All Tags</h1>
@@ -27,7 +30,7 @@ const TagsPage = async () => {
 
       <section className="mt-12 flex w-full gap-4">
         {result.tags.length > 0 ? (
-          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3">
+          <div className="grid grid-cols-1 gap-2  sm:grid-cols-2 md:grid-cols-4">
             {result.tags.map((tag) => (
               <Link
                 href={`/tags/${tag._id}`}

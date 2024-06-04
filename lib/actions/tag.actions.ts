@@ -8,6 +8,7 @@ import {
 import db from "../db";
 import User from "@/database/user.model";
 import Tag from "@/database/tag.model";
+import { FilterQuery } from "mongoose";
 
 export async function getTopInteractedTags(params: GetTopInteractedTagsParams) {
   try {
@@ -36,7 +37,13 @@ export async function getTopInteractedTags(params: GetTopInteractedTagsParams) {
 export async function getAllTags(params: GetAllTagsParams) {
   try {
     db.connect();
-    const tags = await Tag.find({});
+    const { searchQuery } = params;
+    const query: FilterQuery<typeof User> = {};
+
+    if (searchQuery) {
+      query.$or = [{ name: { $regex: new RegExp(searchQuery, "i") } }];
+    }
+    const tags = await Tag.find(query);
     return { tags };
   } catch (error) {
     console.log("error");
@@ -47,7 +54,7 @@ export async function getAllTags(params: GetAllTagsParams) {
 export async function getQuestionsByTagId(params: GetQuestionsByTagIdParams) {
   try {
     db.connect();
-    const { tagId, page = 1, pageSize = 10, searchQuery = "" } = params;
+    const { tagId, page = 1, pageSize = 10, searchQuery } = params;
     const tagFilter = searchQuery ? { _id: tagId } : {};
 
     const tag = await Tag.findOne(tagFilter).populate({
