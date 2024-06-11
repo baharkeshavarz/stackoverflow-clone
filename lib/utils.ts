@@ -60,7 +60,7 @@ interface UrlQueryParams {
 }
 
 export const formUrlQuery = ({ params, key, value }: UrlQueryParams) => {
-  // Just update the "q"
+  // Just update the "key" from params
   const currentUrl = qs.parse(params);
   currentUrl[key] = value;
 
