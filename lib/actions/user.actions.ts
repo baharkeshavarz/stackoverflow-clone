@@ -168,17 +168,44 @@ export async function toggleSaveQuestion(params: ToggleSaveQuestionParams) {
 export async function getSavedQuestions(params: GetSavedQuestionsParams) {
   try {
     await db.connect();
-    const { clerkId, page = 1, pageSize = 10, searchQuery } = params;
+    const { clerkId, filter, page = 1, pageSize = 10, searchQuery } = params;
 
     const query: FilterQuery<typeof User> = searchQuery
       ? { title: { $regex: new RegExp(searchQuery, "i") } }
       : {};
 
+    // Apply filters
+    let sortOptions = {};
+    switch (filter) {
+      case "most_recent":
+        sortOptions = { createdAt: -1 };
+        break;
+
+      case "oldest":
+        sortOptions = { createdAt: 1 };
+        break;
+
+      case "most_voted":
+        sortOptions = { upvotes: -1 };
+        break;
+
+      case "most_viewed":
+        sortOptions = { views: -1 };
+        break;
+
+      case "most_answered":
+        sortOptions = { answers: -1 };
+        break;
+
+      default:
+        break;
+    }
+
     const user = await User.findOne({ clerkId }).populate({
       path: "saved",
       match: query,
       options: {
-        sort: { createdAt: -1 },
+        sort: sortOptions,
         skip: (page - 1) * pageSize,
         limit: pageSize,
       },
