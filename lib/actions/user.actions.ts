@@ -177,7 +177,9 @@ export async function toggleSaveQuestion(params: ToggleSaveQuestionParams) {
 export async function getSavedQuestions(params: GetSavedQuestionsParams) {
   try {
     await db.connect();
-    const { clerkId, filter, page = 1, pageSize = 10, searchQuery } = params;
+    const { clerkId, filter, page = 1, pageSize = 19, searchQuery } = params;
+    // Calculate the number of posts to skip based on the page number and page size
+    const skipAmount = (page - 1) * pageSize;
 
     const query: FilterQuery<typeof User> = searchQuery
       ? { title: { $regex: new RegExp(searchQuery, "i") } }
@@ -215,8 +217,8 @@ export async function getSavedQuestions(params: GetSavedQuestionsParams) {
       match: query,
       options: {
         sort: sortOptions,
-        skip: (page - 1) * pageSize,
-        limit: pageSize,
+        skip: skipAmount,
+        limit: pageSize + 1,
       },
       populate: [
         { path: "tags", model: Tag, select: "_id name" },
@@ -229,7 +231,11 @@ export async function getSavedQuestions(params: GetSavedQuestionsParams) {
     }
 
     const savedQuestions = user.saved;
-    return { questions: savedQuestions };
+
+    // Calculate if there is next page or not
+    const isNext = savedQuestions.length > pageSize;
+
+    return { questions: savedQuestions, isNext };
   } catch (error) {
     console.log("error");
     throw error;
