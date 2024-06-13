@@ -17,7 +17,6 @@ import Tag from "@/database/tag.model";
 import User from "@/database/user.model";
 import Answer from "@/database/answer.model";
 import { FilterQuery } from "mongoose";
-// import FilterQuery from "mongodb";
 
 export async function getUserById(params: any) {
   try {
@@ -94,7 +93,10 @@ export async function deleteUser(params: DeleteUserParams) {
 export async function getAllUsers(params: GetAllUserParams) {
   try {
     await db.connect();
-    const { searchQuery, filter } = params;
+    const { searchQuery, filter, page = 1, pageSize = 1 } = params;
+    // Calculate the number of posts to skip based on the page number and page size
+    const skipAmount = (page - 1) * pageSize;
+
     const query: FilterQuery<typeof User> = {};
 
     if (searchQuery) {
@@ -123,9 +125,16 @@ export async function getAllUsers(params: GetAllUserParams) {
         break;
     }
 
-    const users = await User.find(query).sort(sortOptions);
+    const users = await User.find(query)
+      .skip(skipAmount)
+      .limit(pageSize)
+      .sort(sortOptions);
 
-    return { users };
+    // Calculate if there is next page or not
+    const totalUsers = await User.countDocuments(query);
+    const isNext = totalUsers > skipAmount + users.length;
+
+    return { users, isNext };
   } catch (error) {
     console.log("error");
     throw error;
