@@ -7,6 +7,7 @@ import Image from "next/image";
 import { getTimeStamp } from "@/lib/utils";
 import ParseHTML from "./ParseHTML";
 import Votes from "./Votes";
+import Pagination from "./Pagination";
 
 interface AllAnswersProps {
   questionId: string;
@@ -28,8 +29,6 @@ const AllAnswers = async ({
     page: page ? +page : 1,
     sortBy: filter,
   });
-
-  console.log("result", result);
   return (
     <div className="mt-11">
       <div className="flex items-center justify-between">
@@ -78,6 +77,10 @@ const AllAnswers = async ({
             <ParseHTML data={answer.content} />
           </article>
         ))}
+      </div>
+
+      <div className="mt-10 w-full">
+        <Pagination pageNumber={page ? +page : 1} isNext={result?.isNext} />
       </div>
     </div>
   );

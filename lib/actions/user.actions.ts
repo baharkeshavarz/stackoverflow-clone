@@ -231,7 +231,6 @@ export async function getSavedQuestions(params: GetSavedQuestionsParams) {
     }
 
     const savedQuestions = user.saved;
-
     // Calculate if there is next page or not
     const isNext = savedQuestions.length > pageSize;
 
