@@ -20,9 +20,12 @@ import { FilterQuery } from "mongoose";
 export async function getQuestions(params: GetQuestionParams) {
   try {
     await db.connect();
-    const { searchQuery, filter } = params;
-    const query: FilterQuery<typeof Question> = {};
+    const { searchQuery, filter, page = 1, pageSize = 20 } = params;
 
+    // Calculate the number of posts to skip based on the page number and page size
+    const skipAmount = (page - 1) * pageSize;
+
+    const query: FilterQuery<typeof Question> = {};
     if (searchQuery) {
       query.$or = [
         { title: { $regex: new RegExp(searchQuery, "i") } },
@@ -49,9 +52,15 @@ export async function getQuestions(params: GetQuestionParams) {
     const questions = await Question.find(query)
       .populate({ path: "tags", model: Tag })
       .populate({ path: "author", model: User })
+      .skip(skipAmount)
+      .limit(pageSize)
       .sort(sortOptions);
 
-    return { questions };
+    // Calculate if there is next page or not
+    const totalQuestions = await Question.countDocuments(query);
+    const isNext = totalQuestions > skipAmount + questions.length;
+
+    return { questions, isNext };
   } catch (error) {
     console.log(error);
   }
