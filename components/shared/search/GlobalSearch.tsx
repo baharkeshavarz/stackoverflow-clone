@@ -35,7 +35,7 @@ const GlobalSearch = () => {
       }
     }, 300);
     return () => clearTimeout(delayDebounceFn);
-  }, [search, searchParams, pathname, router]);
+  }, [search, searchParams, pathname, router, query]);
 
   return (
     <div className="relative w-full max-w-[600px]">
