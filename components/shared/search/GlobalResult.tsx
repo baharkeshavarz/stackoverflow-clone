@@ -7,24 +7,22 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import GlobalFilters from "./GlobalFilters";
+import { globalSearch } from "@/lib/actions/general.actions";
 
 const GlobalResult = () => {
   const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
-  const [result, setResult] = useState([
-    { type: "question", id: 1, title: "NExt question" },
-    { type: "tag", id: 2, title: "Tag question" },
-    { type: "user", id: 3, title: "user question" },
-  ]);
+  const [result, setResult] = useState([]);
   const global = searchParams.get("global");
   const type = searchParams.get("type");
 
   useEffect(() => {
     const fetchResult = async () => {
-      // setResult([]);
+      setResult([]);
       setIsLoading(true);
       try {
-        // call api
+        const res = await globalSearch({ query: global, type });
+        setResult(res ? JSON.parse(res) : []);
       } catch (error) {
         console.log(error);
         throw error;
@@ -32,11 +30,26 @@ const GlobalResult = () => {
         setIsLoading(false);
       }
     };
-    fetchResult();
+
+    if (global) {
+      fetchResult();
+    }
   }, [global, type]);
 
   const renderLink = (type: string, id: string) => {
-    return "/";
+    switch (type) {
+      case "question":
+      case "answer":
+        return `/question/${id}`;
+
+      case "user":
+        return `/profile/${id}`;
+
+      case "tag":
+        return `/tags/${id}`;
+      default:
+        return "/";
+    }
   };
 
   return (
@@ -59,10 +72,10 @@ const GlobalResult = () => {
         ) : (
           <div className="flex flex-col gap-2">
             {result.length > 0 ? (
-              result.map((item: any, index: number) => (
+              result!.map((item: any, index: number) => (
                 <Link
                   key={item.type + item.id + index}
-                  href={renderLink("type", "id")}
+                  href={renderLink(item.type, item.id)}
                   className="flex w-full cursor-pointer 
                   items-start gap-3 px-5 py-2.5 hover:bg-light-700/50
                   dark:bg-dark-500/50"
