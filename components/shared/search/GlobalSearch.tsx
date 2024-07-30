@@ -22,6 +22,8 @@ const GlobalSearch = () => {
       if (
         searchContainerRef.current &&
         // @ts-ignore
+        // event.target refers to the specific element that was clicked.
+        // contains(event.target) is a method that checks if the clicked element (event.target) is inside the search container.
         !searchContainerRef.current.contains(event.target)
       ) {
         setIsOpen(false);

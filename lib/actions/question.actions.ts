@@ -8,7 +8,7 @@ import {
   EditQuestionParams,
   GetQuestionByIdParams,
   GetQuestionParams,
-  QuestionVoteParams,
+  QuestionVoteParams
 } from "./shared.types";
 import Tag from "@/database/tag.model";
 import User from "@/database/user.model";
@@ -28,7 +28,7 @@ export async function getQuestions(params: GetQuestionParams) {
     if (searchQuery) {
       query.$or = [
         { title: { $regex: new RegExp(searchQuery, "i") } },
-        { content: { $regex: new RegExp(searchQuery, "i") } },
+        { content: { $regex: new RegExp(searchQuery, "i") } }
       ];
     }
 
@@ -73,7 +73,7 @@ export async function createQuestion(params: CreateQuestionParams) {
     const question = await Question.create({
       title,
       content,
-      author,
+      author
     });
 
     const tagDocuments = [];
@@ -89,8 +89,19 @@ export async function createQuestion(params: CreateQuestionParams) {
 
     // Add tags to inserted question
     await Question.findByIdAndUpdate(question._id, {
-      $push: { tags: { $each: tagDocuments } },
+      $push: { tags: { $each: tagDocuments } }
     });
+
+    // Create and interaction record fot the user's ask_question action
+    await Interaction.create({
+      user: author,
+      action: "ask_question",
+      question: question._id,
+      tags: tagDocuments
+    });
+
+    // Increment author's reputation by +5 for creating a question
+    await User.findByIdAndUpdate(author, { $inc: { reputation: 5 } });
 
     revalidatePath(path);
   } catch (error) {
@@ -107,7 +118,7 @@ export async function getQuestionById(params: GetQuestionByIdParams) {
       .populate({
         path: "author",
         model: User,
-        select: "_id clerkId name picture",
+        select: "_id clerkId name picture"
       });
 
     return question;
@@ -127,14 +138,14 @@ export async function upvoteQuestion(params: QuestionVoteParams) {
     } else if (hasdownVoted) {
       updateQuery = {
         $pull: { downvotes: userId },
-        $push: { upvotes: userId },
+        $push: { upvotes: userId }
       };
     } else {
       updateQuery = { $addToSet: { upvotes: userId } };
     }
 
     const question = await Question.findByIdAndUpdate(questionId, updateQuery, {
-      new: true,
+      new: true
     });
 
     if (!question) {
@@ -161,14 +172,14 @@ export async function downvoteQuestion(params: QuestionVoteParams) {
     } else if (hasupVoted) {
       updateQuery = {
         $pull: { upvotes: userId },
-        $push: { downvotes: userId },
+        $push: { downvotes: userId }
       };
     } else {
       updateQuery = { $addToSet: { downvotes: userId } };
     }
 
     const question = await Question.findByIdAndUpdate(questionId, updateQuery, {
-      new: true,
+      new: true
     });
 
     if (!question) {
@@ -192,7 +203,7 @@ export async function deleteQuestion(params: DeleteQuestionParams) {
     await Tag.updateMany(
       { question: questionId },
       {
-        $pull: { questions: questionId },
+        $pull: { questions: questionId }
       }
     );
     revalidatePath(path);
@@ -229,7 +240,7 @@ export async function getHotQuestions() {
     const hotQuestions = await Question.find({})
       .sort({
         views: -1,
-        upvotes: -1,
+        upvotes: -1
       })
       .limit(5);
 

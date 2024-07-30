@@ -8,7 +8,7 @@ import {
   GetUserByIdParams,
   GetUserStatsParams,
   ToggleSaveQuestionParams,
-  UpdateUserParams,
+  UpdateUserParams
 } from "@/types/shared.types";
 import db from "../db";
 import { revalidatePath } from "next/cache";
@@ -25,7 +25,7 @@ export async function getUserById(params: any) {
 
     // Find user
     const user = await User.findOne({
-      clerkId: userId,
+      clerkId: userId
     });
     return user;
   } catch (error) {
@@ -51,7 +51,7 @@ export async function updateUser(params: UpdateUserParams) {
     await db.connect();
     const { clerkId, updateData, path } = params;
     await User.findOneAndUpdate({ clerkId }, updateData, {
-      new: true,
+      new: true
     });
     revalidatePath(path);
   } catch (error) {
@@ -102,7 +102,7 @@ export async function getAllUsers(params: GetAllUserParams) {
     if (searchQuery) {
       query.$or = [
         { name: { $regex: new RegExp(searchQuery, "i") } },
-        { username: { $regex: new RegExp(searchQuery, "i") } },
+        { username: { $regex: new RegExp(searchQuery, "i") } }
       ];
     }
 
@@ -218,12 +218,12 @@ export async function getSavedQuestions(params: GetSavedQuestionsParams) {
       options: {
         sort: sortOptions,
         skip: skipAmount,
-        limit: pageSize + 1,
+        limit: pageSize + 1
       },
       populate: [
         { path: "tags", model: Tag, select: "_id name" },
-        { path: "author", model: User, select: "_id clerkId name picture" },
-      ],
+        { path: "author", model: User, select: "_id clerkId name picture" }
+      ]
     });
 
     if (!user) {
@@ -270,7 +270,7 @@ export async function getUserQuestions(params: GetUserStatsParams) {
 
     const totalQuestions = await Question.countDocuments({ author: userId });
     const userQuestions = await Question.find({ author: userId })
-      .sort({ views: -1, upvotes: -1 })
+      .sort({ createdAt: -1, views: -1, upvotes: -1 })
       .skip(skipAmount)
       .limit(pageSize)
       .populate("tags", "_id name")
