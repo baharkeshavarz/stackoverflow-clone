@@ -8,7 +8,7 @@ import {
   GetUserByIdParams,
   GetUserStatsParams,
   ToggleSaveQuestionParams,
-  UpdateUserParams
+  UpdateUserParams,
 } from "@/types/shared.types";
 import db from "../db";
 import { revalidatePath } from "next/cache";
@@ -17,6 +17,8 @@ import Tag from "@/database/tag.model";
 import User from "@/database/user.model";
 import Answer from "@/database/answer.model";
 import { FilterQuery } from "mongoose";
+import { BadgeCriteriaType } from "@/types/index";
+import { assignBadges } from "../utils";
 
 export async function getUserById(params: any) {
   try {
@@ -25,7 +27,7 @@ export async function getUserById(params: any) {
 
     // Find user
     const user = await User.findOne({
-      clerkId: userId
+      clerkId: userId,
     });
     return user;
   } catch (error) {
@@ -51,7 +53,7 @@ export async function updateUser(params: UpdateUserParams) {
     await db.connect();
     const { clerkId, updateData, path } = params;
     await User.findOneAndUpdate({ clerkId }, updateData, {
-      new: true
+      new: true,
     });
     revalidatePath(path);
   } catch (error) {
@@ -102,7 +104,7 @@ export async function getAllUsers(params: GetAllUserParams) {
     if (searchQuery) {
       query.$or = [
         { name: { $regex: new RegExp(searchQuery, "i") } },
-        { username: { $regex: new RegExp(searchQuery, "i") } }
+        { username: { $regex: new RegExp(searchQuery, "i") } },
       ];
     }
 
@@ -218,12 +220,12 @@ export async function getSavedQuestions(params: GetSavedQuestionsParams) {
       options: {
         sort: sortOptions,
         skip: skipAmount,
-        limit: pageSize + 1
+        limit: pageSize + 1,
       },
       populate: [
         { path: "tags", model: Tag, select: "_id name" },
-        { path: "author", model: User, select: "_id clerkId name picture" }
-      ]
+        { path: "author", model: User, select: "_id clerkId name picture" },
+      ],
     });
 
     if (!user) {
@@ -253,8 +255,68 @@ export async function getUserInfo(params: GetUserByIdParams) {
     // Find related data to user
     const totalQuestions = await Question.countDocuments({ author: user._id });
     const totalAnswers = await Answer.countDocuments({ author: user._id });
+    const [questionUpvotes] = await Question.aggregate([
+      { $match: { author: user._id } },
+      {
+        $project: {
+          _id: 0,
+          upvotes: { $size: "$upvotes" },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalUpvotes: { $sum: "$upvotes" },
+        },
+      },
+    ]);
 
-    return { user, totalQuestions, totalAnswers };
+    const [answerUpvotes] = await Answer.aggregate([
+      { $match: { author: user._id } },
+      {
+        $project: {
+          _id: 0,
+          upvotes: { $size: "$upvotes" },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalUpvotes: { $sum: "$upvotes" },
+        },
+      },
+    ]);
+
+    const [questionViews] = await Question.aggregate([
+      { $match: { author: user._id } },
+      {
+        $group: {
+          _id: null,
+          totalViews: { $sum: "$views" },
+        },
+      },
+    ]);
+
+    const criteria = [
+      { type: "QUESTION_COUNT" as BadgeCriteriaType, count: totalQuestions },
+      { type: "ANSWER_COUNT" as BadgeCriteriaType, count: totalAnswers },
+      {
+        type: "QUESTION_UPVOTES" as BadgeCriteriaType,
+        count: questionUpvotes?.totalUpvotes || 0,
+      },
+      {
+        type: "ANSWER_UPVOTES" as BadgeCriteriaType,
+        count: answerUpvotes?.totalUpvotes || 0,
+      },
+      {
+        type: "TOTAL_VIEWS" as BadgeCriteriaType,
+        count: questionViews?.totalViews || 0,
+      },
+    ];
+
+    const badgeCounts = assignBadges({ criteria });
+
+    return { user, totalQuestions, totalAnswers, badgeCounts };
   } catch (error) {
     console.log("error");
     throw error;
