@@ -19,7 +19,7 @@ const LocalSearchbar = ({
   iconPosition,
   imgSrc,
   placeholder,
-  otherClasses,
+  otherClasses
 }: LocalSearchbarProps) => {
   const router = useRouter();
   const pathname = usePathname();
@@ -33,14 +33,14 @@ const LocalSearchbar = ({
         const newUrl = formUrlQuery({
           params: searchParams.toString(),
           key: "q",
-          value: search,
+          value: search
         });
         router.push(newUrl, { scroll: false });
       } else {
         if (pathname === route) {
           const newUrl = removeKeysFromQuery({
             params: searchParams.toString(),
-            keysToRemove: ["q"],
+            keysToRemove: ["q"]
           });
           router.push(newUrl, { scroll: false });
         }
@@ -66,7 +66,7 @@ const LocalSearchbar = ({
         placeholder={placeholder}
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className="no-focus placeholder paragraph-regular background-light800_dark400 border-none shadow-none outline-none"
+        className="no-focus placeholder paragraph-regular text-dark400_light700 border-none bg-transparent shadow-none outline-none"
       />
       {iconPosition === "right" && (
         <Image

@@ -7,7 +7,7 @@ import {
   SelectGroup,
   SelectItem,
   SelectTrigger,
-  SelectValue,
+  SelectValue
 } from "@/components/ui/select";
 import { useRouter, useSearchParams } from "next/navigation";
 import { formUrlQuery } from "@/lib/utils";
@@ -30,7 +30,7 @@ const Filter = ({ filters, otherClasses, containerClasses }: FilterProps) => {
     const newUrl = formUrlQuery({
       params: searchParams.toString(),
       key: "filter",
-      value,
+      value
     });
 
     router.push(newUrl, { scroll: false });
@@ -53,7 +53,11 @@ const Filter = ({ filters, otherClasses, containerClasses }: FilterProps) => {
           <SelectContent>
             <SelectGroup className="dark:bg-dark-100 dark:text-white">
               {filters.map((filter) => (
-                <SelectItem key={filter.value} value={filter.value}>
+                <SelectItem
+                  key={filter.value}
+                  value={filter.value}
+                  className="cursor-pointer focus:bg-light-800 dark:focus:bg-dark-400"
+                >
                   {filter.name}
                 </SelectItem>
               ))}

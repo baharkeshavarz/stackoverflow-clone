@@ -9,7 +9,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
+  FormMessage
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -36,8 +36,8 @@ const Profile = ({ clerkId, user }: ProfileProps) => {
       username: parsedUser.username || "",
       portfolioWebsite: parsedUser.portfolioWebsite || "",
       location: parsedUser.location || "",
-      bio: parsedUser.bio || "",
-    },
+      bio: parsedUser.bio || ""
+    }
   });
 
   async function onSubmit(values: z.infer<typeof ProfileSchema>) {
@@ -50,9 +50,9 @@ const Profile = ({ clerkId, user }: ProfileProps) => {
           username: values.username,
           portfolioWebsite: values.portfolioWebsite,
           location: values.location,
-          bio: values.bio,
+          bio: values.bio
         },
-        path: pathname,
+        path: pathname
       });
       router.back();
     } catch (error) {
@@ -80,7 +80,7 @@ const Profile = ({ clerkId, user }: ProfileProps) => {
               <FormControl className="mt-3.5">
                 <Input
                   placeholder="Your name"
-                  className="no-focus paragraph-regular background-light700_dark300
+                  className="no-focus paragraph-regular background-light800_dark300
                      light-border-2 text-dark300_light700 min-h-[56px] border"
                   {...field}
                 />
@@ -101,7 +101,7 @@ const Profile = ({ clerkId, user }: ProfileProps) => {
               <FormControl className="mt-3.5">
                 <Input
                   placeholder="Your username"
-                  className="no-focus paragraph-regular background-light700_dark300
+                  className="no-focus paragraph-regular background-light800_dark300
                      light-border-2 text-dark300_light700 min-h-[56px] border"
                   {...field}
                 />
@@ -122,7 +122,7 @@ const Profile = ({ clerkId, user }: ProfileProps) => {
                 <Input
                   type="url"
                   placeholder="Your portfolio URL"
-                  className="no-focus paragraph-regular background-light700_dark300
+                  className="no-focus paragraph-regular background-light800_dark300
                      light-border-2 text-dark300_light700 min-h-[56px] border"
                   {...field}
                 />
@@ -142,7 +142,7 @@ const Profile = ({ clerkId, user }: ProfileProps) => {
               <FormControl className="mt-3.5">
                 <Input
                   placeholder="Where are you from?"
-                  className="no-focus paragraph-regular background-light700_dark300
+                  className="no-focus paragraph-regular background-light800_dark300
                      light-border-2 text-dark300_light700 min-h-[56px] border"
                   {...field}
                 />
@@ -163,7 +163,7 @@ const Profile = ({ clerkId, user }: ProfileProps) => {
               <FormControl className="mt-3.5">
                 <Textarea
                   placeholder="What's special about you?"
-                  className="no-focus paragraph-regular background-light700_dark300
+                  className="no-focus paragraph-regular background-light800_dark300
                      light-border-2 text-dark300_light700 min-h-[56px] border"
                   {...field}
                 />
