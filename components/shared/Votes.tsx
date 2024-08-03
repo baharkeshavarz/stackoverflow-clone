@@ -4,7 +4,7 @@ import { downvoteAnswer, upvoteAnswer } from "@/lib/actions/answer.actions";
 import { viewQuestion } from "@/lib/actions/interaction.actions";
 import {
   downvoteQuestion,
-  upvoteQuestion,
+  upvoteQuestion
 } from "@/lib/actions/question.actions";
 import { toggleSaveQuestion } from "@/lib/actions/user.actions";
 import { formatAndDivideNumber } from "@/lib/utils";
@@ -12,6 +12,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import React, { useEffect } from "react";
 import { undefined } from "zod";
+import { useToast } from "@/components/ui/use-toast";
 
 interface VotesProps {
   type: string;
@@ -32,12 +33,17 @@ const Votes = ({
   hasupVoted,
   downvotes,
   hasdownVoted,
-  hasSaved,
+  hasSaved
 }: VotesProps) => {
   const pathname = usePathname();
+  const { toast } = useToast();
 
   const handleVote = async (action: string) => {
-    if (!userId) return;
+    if (!userId)
+      return toast({
+        title: "Please log in!",
+        description: "You must be logged in!"
+      });
     if (action === "upvote") {
       if (type === "Question") {
         await upvoteQuestion({
@@ -45,7 +51,7 @@ const Votes = ({
           userId: JSON.parse(userId),
           hasupVoted,
           hasdownVoted,
-          path: pathname,
+          path: pathname
         });
       } else if (type === "Answer") {
         await upvoteAnswer({
@@ -53,11 +59,14 @@ const Votes = ({
           userId: JSON.parse(userId),
           hasupVoted,
           hasdownVoted,
-          path: pathname,
+          path: pathname
         });
       }
 
-      // todo: show the toast
+      return toast({
+        title: `Upvote ${!hasupVoted ? "Successful" : "Removed"}`,
+        variant: !hasupVoted ? "default" : "destructive"
+      });
     }
 
     if (action === "downvote") {
@@ -67,7 +76,7 @@ const Votes = ({
           userId: JSON.parse(userId),
           hasupVoted,
           hasdownVoted,
-          path: pathname,
+          path: pathname
         });
       } else if (type === "Answer") {
         await downvoteAnswer({
@@ -75,17 +84,26 @@ const Votes = ({
           userId: JSON.parse(userId),
           hasupVoted,
           hasdownVoted,
-          path: pathname,
+          path: pathname
         });
       }
-      // todo: show the toast
+
+      return toast({
+        title: `Downvote ${!hasdownVoted ? "Successful" : "Removed"}`,
+        variant: !hasdownVoted ? "default" : "destructive"
+      });
     }
   };
   const handleSave = async () => {
     await toggleSaveQuestion({
       userId: JSON.parse(userId),
       questionId: JSON.parse(itemId),
-      path: pathname,
+      path: pathname
+    });
+
+    return toast({
+      title: `Question ${!hasSaved ? "Saved in" : "Removed from"} your collection!`,
+      variant: !hasSaved ? "default" : "destructive"
     });
   };
 
@@ -93,7 +111,7 @@ const Votes = ({
     const viewQuestionFunc = async () => {
       await viewQuestion({
         questionId: JSON.parse(itemId),
-        userId: userId ? JSON.parse(userId) : undefined,
+        userId: userId ? JSON.parse(userId) : undefined
       });
     };
     viewQuestionFunc();
